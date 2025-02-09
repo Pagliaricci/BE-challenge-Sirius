@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using EmailService.Models;
-using EmailService.Services;
+using EmailService.Modules.Users.Models;
+using EmailService.Modules.Users.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-
-namespace EmailService.Controllers
-
+namespace EmailService.Modules.Users.Controllers
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController: ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly UserService _userService;
 
@@ -24,7 +24,6 @@ namespace EmailService.Controllers
             return await _userService.GetAllUsersAsync();
         }
 
-
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
@@ -33,7 +32,6 @@ namespace EmailService.Controllers
                 return NotFound();
             return user;
         }
-
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> CreateUser([FromBody] CreateUser user)

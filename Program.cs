@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using EmailService.Services;
 using EmailService.Data;
+using EmailService.Modules.Users.Repositories;
+using EmailService.Modules.Users.Services;
+using EmailService.Modules.Email.Services;
+using EmailService.Modules.Email.EmailProviders;
+using EmailService.Modules.Stats.Services;
 using Microsoft.EntityFrameworkCore;
-using EmailService.Repositories;
-using EmailProviders;
-using EmailService.Services;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,19 +23,18 @@ if (string.IsNullOrEmpty(jwtSecret))
 }
 var key = Encoding.UTF8.GetBytes(jwtSecret);
 
-// ✅ Ensure correct DbContext scope
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<EmailsService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<StatsService>(); // Register StatsService
+builder.Services.AddScoped<IUserRepository, UserRepository>(); // Register UserRepository
 
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IEmailService, EmailsService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IStatsService, StatsService>();
+
 
 builder.Services.AddScoped<IEmailProvider, MailgunProvider>();
 builder.Services.AddScoped<IEmailProvider, SendGridProvider>();

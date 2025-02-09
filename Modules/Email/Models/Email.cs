@@ -1,5 +1,5 @@
 
-namespace EmailService.Models
+namespace EmailService.Modules.Email.Models
 {
 
     public class SendEmailRequest

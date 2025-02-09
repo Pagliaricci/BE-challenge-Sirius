@@ -1,13 +1,13 @@
-using EmailService.Models;
-using EmailService.Repositories;
+using EmailService.Modules.Users.Models;
+using EmailService.Modules.Users.Repositories;
 
-namespace EmailService.Services
+namespace EmailService.Modules.Users.Services
 {
     public class UserService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(UserRepository userRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

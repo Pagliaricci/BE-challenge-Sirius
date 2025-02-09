@@ -1,11 +1,11 @@
-using EmailService.Models;
+using EmailService.Modules.Email.Models;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Threading.Tasks;
 
-namespace EmailProviders
+namespace EmailService.Modules.Email.EmailProviders
 {
     public class MailgunProvider : IEmailProvider
     {

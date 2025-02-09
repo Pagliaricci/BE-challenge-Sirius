@@ -1,28 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using EmailService.Models;
+using EmailService.Modules.Stats.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using EmailService.Services;
+using EmailService.Modules.Stats.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-
-namespace EmailService.Controllers
+namespace EmailService.Modules.Stats.Controllers
 {
-    
     [ApiController]
     [Route("api/stats")]
     public class StatsController : ControllerBase
     {
-        private readonly StatsService _statsService;
+        private readonly IStatsService _statsService;
 
-        public StatsController(StatsService statsService)
+        public StatsController(IStatsService statsService)
         {
             _statsService = statsService;
-
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<Stats>>> GetAllStats()
+        public async Task<ActionResult<List<Stat>>> GetAllStats()
         {
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
             System.Console.WriteLine($"Rol: {role}");
@@ -30,7 +29,8 @@ namespace EmailService.Controllers
             {
                 return Forbid();
             }
-            return await _statsService.GetAllStatsAsync();
+            var stats = await _statsService.GetAllStatsAsync();
+            return Ok(stats);
         }
     }
 }

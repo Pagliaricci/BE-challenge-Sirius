@@ -2,17 +2,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EmailService.Models;
-using EmailService.Repositories;
+using EmailService.Modules.Users.Models;
+using EmailService.Modules.Users.Repositories;
 using EmailService.Data; // Add this line
 
-namespace EmailService.Services
+namespace EmailService.Modules.Users.Services
 {
     public class AuthService : IAuthService
     {
         private readonly string _secretKey = "EsteEsUnSecretoSuperSeguro123456789"; 
-        private readonly UserRepository _userRepository;
-        public AuthService(UserRepository userRepository) 
+        private readonly IUserRepository _userRepository;
+        public AuthService(IUserRepository userRepository) 
         {
             _userRepository = userRepository;
             }

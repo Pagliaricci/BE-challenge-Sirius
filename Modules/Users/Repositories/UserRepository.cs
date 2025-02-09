@@ -1,10 +1,12 @@
 using EmailService.Data;
-using EmailService.Models;
+using EmailService.Modules.Users.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace EmailService.Repositories
+namespace EmailService.Modules.Users.Repositories
 {
-    public class UserRepository
+    public class UserRepository: IUserRepository
     {
         private readonly AppDbContext _context;
 
@@ -12,7 +14,8 @@ namespace EmailService.Repositories
         {
             _context = context;
         }
-         public async Task<User> GetUserByIdAsync(int id)
+
+        public async Task<User> GetUserByIdAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -29,7 +32,7 @@ namespace EmailService.Repositories
 
         public async Task<User> CreateUserAsync(CreateUser user)
         {
-            var savedUser =_context.Users.Add(new User
+            var savedUser = _context.Users.Add(new User
             {
                 Username = user.Username,
                 PasswordHash = user.Password,
@@ -42,13 +45,13 @@ namespace EmailService.Repositories
             return savedUser.Entity;
         }
 
-                public async Task<bool> UpdateUserAsync(User user)
+        public async Task<bool> UpdateUserAsync(User user)
         {
             _context.Users.Update(user);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
-        
+
         public async Task<bool> DeleteUserAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -65,5 +68,4 @@ namespace EmailService.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash);
         }
     }
-
 }

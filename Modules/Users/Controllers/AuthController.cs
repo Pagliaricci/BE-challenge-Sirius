@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using EmailService.Models;
+using EmailService.Modules.Users.Models;
 using Microsoft.AspNetCore.Authorization;
-
-namespace EmailService.Controllers
+using EmailService.Modules.Users.Services;
+namespace EmailService.Modules.Users.Controllers
 {
    [ApiController]
 [Route("api/auth")]

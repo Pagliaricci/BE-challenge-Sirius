@@ -1,9 +1,10 @@
-using EmailService.Models;
+using EmailService.Modules.Email.Models;
 using Microsoft.Extensions.Configuration;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace EmailProviders{
+namespace EmailService.Modules.Email.EmailProviders
+{
 
 public class SendGridProvider : IEmailProvider
 {
