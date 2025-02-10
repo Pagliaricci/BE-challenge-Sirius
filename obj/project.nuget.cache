@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "u+pWwByqZ/8=",
+  "dgSpecHash": "+EBQVZexS9g=",
   "success": true,
   "projectFilePath": "/Users/pablopagliaricci/EmailService/EmailService.csproj",
   "expectedPackageFiles": [
+    "/Users/pablopagliaricci/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/dotnetenv/3.1.1/dotnetenv.3.1.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/fluentassertions/8.0.1/fluentassertions.8.0.1.nupkg.sha512",

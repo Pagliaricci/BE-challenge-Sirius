@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmailService.Modules.Users.Repositories
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
 
@@ -63,9 +63,33 @@ namespace EmailService.Modules.Users.Repositories
             return result > 0;
         }
 
-        public async Task<User?> FindUserByUsernameAndPassword(string username, string passwordHash)
+        public async Task<User?> FindUserByUsernameAndPassword(string username, string password)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                return null;
+            }
+            return user;
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<List<User>> GetUsersWithEmailsSentAsync()
+        {
+            return await _context.Users
+            .Where(u => u.EmailsSentToday > 0)
+            .ToListAsync();
+        }
+
+        public async Task<bool> UpdateUsersAsync(List<User> users)
+        {
+            _context.Users.UpdateRange(users);
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
         }
     }
 }

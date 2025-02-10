@@ -19,10 +19,11 @@ namespace EmailService.Modules.Users.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
         {
             return await _userService.GetAllUsersAsync();
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)

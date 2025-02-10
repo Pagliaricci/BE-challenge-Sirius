@@ -24,4 +24,13 @@ namespace EmailService.Modules.Users.Models
         public required string Role { get; set; }
         public required string Email { get; set; }
     }
+
+    public class UserDTO
+    {
+        public int Id { get; set; }
+        public required string Username { get; set; }
+        public required string Role { get; set; }
+        public required string Email { get; set; }
+    }
+
 }

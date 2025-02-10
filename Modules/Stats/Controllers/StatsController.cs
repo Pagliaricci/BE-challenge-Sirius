@@ -24,7 +24,10 @@ namespace EmailService.Modules.Stats.Controllers
         public async Task<ActionResult<List<Stat>>> GetAllStats()
         {
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
-            System.Console.WriteLine($"Rol: {role}");
+            if (string.IsNullOrEmpty(role))
+            {
+                return Unauthorized("Invalid token: missing role");
+            }
             if (role != "Admin")
             {
                 return Forbid();

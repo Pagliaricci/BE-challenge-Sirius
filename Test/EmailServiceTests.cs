@@ -13,6 +13,7 @@ public class EmailServiceTests
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IEmailProvider> _emailProviderMock;
     private readonly EmailsService _emailService;
+    private readonly List<User> _users;
 
     public EmailServiceTests()
     {
@@ -20,108 +21,77 @@ public class EmailServiceTests
         _emailProviderMock = new Mock<IEmailProvider>();
         var emailProviders = new List<IEmailProvider> { _emailProviderMock.Object };
         _emailService = new EmailsService(emailProviders, _userRepositoryMock.Object);
+        _users = TestData.GetTestUsers();
     }
-
-    private readonly SendEmailRequest emailRequest1 = new SendEmailRequest
-    {
-        To = "admin@gmail.com",
-        Subject = "Test Subject",
-        Body = "Test Body"
-    };
-
-    private readonly SendEmailRequest emailRequest2 = new()
-    {
-        To = "user@gmail.com",
-        Subject = "Test Subject",
-        Body = "Test Body"
-    };
-
-    private readonly List<User> _users = new()
-    {
-        new User
-        {
-            Id = 1,
-            Username = "admin",
-            PasswordHash = "admin",
-            Role = "admin",
-            Email = "admin@gmail.com",
-            EmailsSentToday = 0,
-            LastEmailReset = DateTime.UtcNow
-        },
-        new User
-        {
-            Id = 2,
-            Username = "user",
-            PasswordHash = "user",
-            Role = "user",
-            Email = "user@gmail.com",
-            EmailsSentToday = 0,
-            LastEmailReset = DateTime.UtcNow
-        }
-    };
 
     [Fact]
     public async Task SendEmailAsync_ShouldReturnSuccessMessage_WhenEmailIsSentSuccessfully()
     {
-        // Arrange
         var user = _users[0];
         _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(user.Id)).ReturnsAsync(user);
-        _emailProviderMock.Setup(provider => provider.SendEmailAsync(emailRequest1,user)).ReturnsAsync(true);
+        _emailProviderMock
+            .Setup(provider => provider.SendEmailAsync(It.IsAny<SendEmailRequest>(), It.IsAny<User>()))
+            .ReturnsAsync(true);
 
-        // Act
-        var result = await _emailService.SendEmailAsync(emailRequest1, user.Id);
+        var result = await _emailService.SendEmailAsync(TestData.EmailRequest1, user.Id);
 
-        // Assert
         result.Should().Be("Email sent successfully");
         _userRepositoryMock.Verify(repo => repo.UpdateUserAsync(user), Times.Once);
+        _emailProviderMock.Verify(provider => provider.SendEmailAsync(It.IsAny<SendEmailRequest>(), It.IsAny<User>()), Times.Once);
     }
 
     [Fact]
     public async Task SendEmailAsync_ShouldThrowException_WhenUserHasReachedDailyLimit()
     {
-        // Arrange
         var user = _users[0];
         user.EmailsSentToday = 1000;
         _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(user.Id)).ReturnsAsync(user);
 
-        // Act
-        Func<Task> act = async () => await _emailService.SendEmailAsync(emailRequest1, user.Id);
+        Func<Task> act = async () => await _emailService.SendEmailAsync(TestData.EmailRequest1, user.Id);
 
-        // Assert
         await act.Should().ThrowAsync<Exception>().WithMessage("User has reached the daily limit of emails");
     }
 
     [Fact]
     public async Task SendEmailAsync_ShouldResetEmailsSentToday_WhenNewDayStarts()
     {
-        // Arrange
         var user = _users[0];
         user.EmailsSentToday = 10;
         user.LastEmailReset = DateTime.UtcNow.AddDays(-1);
         _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(user.Id)).ReturnsAsync(user);
-        _emailProviderMock.Setup(provider => provider.SendEmailAsync(emailRequest1,user)).ReturnsAsync(true);
+        _emailProviderMock
+            .Setup(provider => provider.SendEmailAsync(It.IsAny<SendEmailRequest>(), It.IsAny<User>()))
+            .ReturnsAsync(true);
 
-        // Act
-        var result = await _emailService.SendEmailAsync(emailRequest1, user.Id);
+        var result = await _emailService.SendEmailAsync(TestData.EmailRequest1, user.Id);
 
-        // Assert
         result.Should().Be("Email sent successfully");
         user.EmailsSentToday.Should().Be(1);
         _userRepositoryMock.Verify(repo => repo.UpdateUserAsync(user), Times.Once);
+        _emailProviderMock.Verify(provider => provider.SendEmailAsync(It.IsAny<SendEmailRequest>(), It.IsAny<User>()), Times.Once);
     }
 
     [Fact]
     public async Task SendEmailAsync_ShouldThrowException_WhenAllProvidersFail()
     {
-        // Arrange
         var user = _users[0];
         _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(user.Id)).ReturnsAsync(user);
-        _emailProviderMock.Setup(provider => provider.SendEmailAsync(emailRequest1,user)).ReturnsAsync(false);
+        _emailProviderMock
+            .Setup(provider => provider.SendEmailAsync(It.IsAny<SendEmailRequest>(), It.IsAny<User>()))
+            .ReturnsAsync(false);
 
-        // Act
-        Func<Task> act = async () => await _emailService.SendEmailAsync(emailRequest1, user.Id);
-
-        // Assert
+        Func<Task> act = async () => await _emailService.SendEmailAsync(TestData.EmailRequest1, user.Id);
         await act.Should().ThrowAsync<Exception>().WithMessage("All email providers failed");
     }
+
+    [Fact]
+    public async Task SendEmailAsync_ShouldThrowException_WhenUserNotFound()
+    {
+        _userRepositoryMock.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync((User)null!);
+
+        Func<Task> act = async () => await _emailService.SendEmailAsync(TestData.EmailRequest1, 1);
+        await act.Should().ThrowAsync<Exception>().WithMessage("Sender or recipient not found");
+    }
+
+
 }

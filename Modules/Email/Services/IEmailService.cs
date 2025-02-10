@@ -5,6 +5,6 @@ namespace EmailService.Modules.Email.Services
 {
     public interface IEmailService
     {
-       Task<string> SendEmailAsync(SendEmailRequest email, int userId);
+        Task<string> SendEmailAsync(SendEmailRequest email, int userId);
     }
 }

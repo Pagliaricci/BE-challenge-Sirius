@@ -29,8 +29,8 @@ namespace EmailService.Modules.Email.EmailProviders
             };
             var client = new RestClient(options);
             var request = new RestRequest();
-            request.AddParameter ("domain", "sandbox266d3a3995624957a34056827b92e92f.mailgun.org", ParameterType.UrlSegment);            request.Resource = "{domain}/messages";
-            request.AddParameter ("from", sender.Email);
+            request.AddParameter("domain", "sandbox266d3a3995624957a34056827b92e92f.mailgun.org", ParameterType.UrlSegment); request.Resource = "{domain}/messages";
+            request.AddParameter("from", sender.Email);
             request.AddParameter("to", email.To);
             request.AddParameter("subject", email.Subject);
             request.AddParameter("text", email.Body);

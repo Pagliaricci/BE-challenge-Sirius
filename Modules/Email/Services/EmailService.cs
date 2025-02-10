@@ -20,11 +20,12 @@ namespace EmailService.Modules.Email.Services
         {
             var sender = await _userRepository.GetUserByIdAsync(userId);
 
-            if (sender == null) {
+            if (sender == null)
+            {
                 throw new Exception("Sender or recipient not found");
             }
 
-                if (DateTime.UtcNow.Date > sender.LastEmailReset.Date)
+            if (DateTime.UtcNow.Date > sender.LastEmailReset.Date)
             {
                 sender.EmailsSentToday = 0;
                 sender.LastEmailReset = DateTime.UtcNow;
@@ -40,7 +41,7 @@ namespace EmailService.Modules.Email.Services
             {
                 try
                 {
-                    var result = await provider.SendEmailAsync(email,sender);
+                    var result = await provider.SendEmailAsync(email, sender);
                     if (result)
                     {
                         sender.EmailsSentToday++;

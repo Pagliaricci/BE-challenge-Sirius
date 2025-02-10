@@ -12,5 +12,9 @@ namespace EmailService.Modules.Users.Repositories
         Task<bool> UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int userId);
         Task<User?> FindUserByUsernameAndPassword(string username, string passwordHash);
+        Task<User?> GetUserByEmailAsync(string email);
+        Task<List<User>> GetUsersWithEmailsSentAsync();
+        Task<bool> UpdateUsersAsync(List<User> users);
+
     }
 }

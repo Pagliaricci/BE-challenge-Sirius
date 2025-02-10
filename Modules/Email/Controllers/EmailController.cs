@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using EmailService.Modules.Email.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace EmailService.Modules.Email.Controllers
 {
@@ -23,11 +22,12 @@ namespace EmailService.Modules.Email.Controllers
         public async Task<ActionResult<string>> CreateEmail([FromBody] SendEmailRequest email)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
+            if (!int.TryParse(userId, out _))
             {
-                return BadRequest("User ID is missing.");
+                return BadRequest("Invalid user ID.");
             }
+
+
 
             var result = await _emailService.SendEmailAsync(email, int.Parse(userId));
             return Ok(result);

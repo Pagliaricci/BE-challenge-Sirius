@@ -10,43 +10,48 @@ namespace EmailService.Modules.Users.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly string _secretKey = "EsteEsUnSecretoSuperSeguro123456789"; 
         private readonly IUserRepository _userRepository;
-        public AuthService(IUserRepository userRepository) 
+        public AuthService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            }
+        }
 
         public async Task<string?> AuthenticateAsync(string username, string password)
         {
             var user = await _userRepository.FindUserByUsernameAndPassword(username, password);
-            if (user == null) {
+            if (user == null)
+            {
                 Console.WriteLine("User not found");
                 return null;
-                }
+            }
 
             return GenerateToken(user);
         }
-           private string GenerateToken(User user)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_secretKey);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        private string GenerateToken(User user)
         {
-            Subject = new ClaimsIdentity(
-            [
-                new Claim(ClaimTypes.Name, user.Username),
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+            if (string.IsNullOrEmpty(jwtSecret))
+            {
+                throw new InvalidOperationException("JWT_SECRET environment variable is not set.");
+            }
+            var key = Encoding.UTF8.GetBytes(jwtSecret);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            ]),
-            Expires = DateTime.UtcNow.AddHours(1),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
+                ]),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
         public User? GetUser(string username, string password)
         {
