@@ -22,8 +22,6 @@ namespace EmailService.Modules.Email.Controllers
         [Authorize]
         public async Task<ActionResult<string>> CreateEmail([FromBody] SendEmailRequest email)
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            var role = User.FindFirst(ClaimTypes.Role)?.Value;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))

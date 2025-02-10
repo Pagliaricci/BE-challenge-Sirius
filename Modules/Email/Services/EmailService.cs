@@ -1,9 +1,7 @@
 using EmailService.Modules.Email.Models;
 using EmailService.Modules.Users.Repositories;
 using EmailService.Modules.Email.EmailProviders;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace EmailService.Modules.Email.Services
 {
@@ -20,30 +18,33 @@ namespace EmailService.Modules.Email.Services
 
         public async Task<string> SendEmailAsync(SendEmailRequest email, int userId)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId);
-    
-                if (DateTime.UtcNow.Date > user.LastEmailReset.Date)
-            {
-                user.EmailsSentToday = 0;
-                user.LastEmailReset = DateTime.UtcNow;
+            var sender = await _userRepository.GetUserByIdAsync(userId);
+
+            if (sender == null) {
+                throw new Exception("Sender or recipient not found");
             }
 
-            if (user.EmailsSentToday >= 1000)
+                if (DateTime.UtcNow.Date > sender.LastEmailReset.Date)
+            {
+                sender.EmailsSentToday = 0;
+                sender.LastEmailReset = DateTime.UtcNow;
+            }
+
+            if (sender.EmailsSentToday >= 1000)
             {
                 throw new Exception("User has reached the daily limit of emails");
             }
-            Console.WriteLine($"User {user.Username} has sent {user.EmailsSentToday} emails today");
 
 
             foreach (var provider in _providers)
             {
                 try
                 {
-                    var result = await provider.SendEmailAsync(email);
+                    var result = await provider.SendEmailAsync(email,sender);
                     if (result)
                     {
-                        user.EmailsSentToday++;
-                        await _userRepository.UpdateUserAsync(user);
+                        sender.EmailsSentToday++;
+                        await _userRepository.UpdateUserAsync(sender);
                         return "Email sent successfully";
                     }
                 }

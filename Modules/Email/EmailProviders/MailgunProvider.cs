@@ -4,6 +4,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Threading.Tasks;
+using EmailService.Modules.Users.Models;
 
 namespace EmailService.Modules.Email.EmailProviders
 {
@@ -18,10 +19,9 @@ namespace EmailService.Modules.Email.EmailProviders
             _domain = Environment.GetEnvironmentVariable("MAILGUN_DOMAIN") ?? throw new InvalidOperationException("Mailgun domain is not configured.");
         }
 
-        public async Task<bool> SendEmailAsync(SendEmailRequest email)
+        public async Task<bool> SendEmailAsync(SendEmailRequest email, User sender)
         {
-            Console.WriteLine("Sending email via Mailgun");
-            Console.WriteLine($"API Key: {_apiKey}");
+
 
             var options = new RestClientOptions("https://api.mailgun.net/v3")
             {
@@ -29,10 +29,9 @@ namespace EmailService.Modules.Email.EmailProviders
             };
             var client = new RestClient(options);
             var request = new RestRequest();
-            request.AddParameter ("domain", "sandbox277ffdf9863e4ff891b8d3f184eb5e03.mailgun.org", ParameterType.UrlSegment);
-            request.Resource = "{domain}/messages";
-            request.AddParameter ("from", email.SenderEmail);
-            request.AddParameter("to", email.RecipientEmail);
+            request.AddParameter ("domain", "sandbox266d3a3995624957a34056827b92e92f.mailgun.org", ParameterType.UrlSegment);            request.Resource = "{domain}/messages";
+            request.AddParameter ("from", sender.Email);
+            request.AddParameter("to", email.To);
             request.AddParameter("subject", email.Subject);
             request.AddParameter("text", email.Body);
             request.Method = Method.Post;

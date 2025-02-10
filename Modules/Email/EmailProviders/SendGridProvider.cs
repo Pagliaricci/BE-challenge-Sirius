@@ -1,5 +1,5 @@
 using EmailService.Modules.Email.Models;
-using Microsoft.Extensions.Configuration;
+using EmailService.Modules.Users.Models;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -17,7 +17,7 @@ public class SendGridProvider : IEmailProvider
 
     }
 
-    public async Task<bool> SendEmailAsync(SendEmailRequest email)
+    public async Task<bool> SendEmailAsync(SendEmailRequest email, User sender)
     {
         Console.WriteLine("Sending email via SendGrid");
         var sendGridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
@@ -27,8 +27,8 @@ public class SendGridProvider : IEmailProvider
         }
 
         var client = new SendGridClient(sendGridApiKey);
-        var from = new EmailAddress(email.SenderEmail, email.SenderName);
-        var to = new EmailAddress(email.RecipientEmail, email.RecipientName);
+        var from = new EmailAddress(sender.Email);
+        var to = new EmailAddress(email.To);
         var subject = email.Subject;
         var plainTextContent = email.Body;
         var htmlContent = email.Body;
@@ -37,5 +37,6 @@ public class SendGridProvider : IEmailProvider
         var response = await client.SendEmailAsync(msg);
         return response.IsSuccessStatusCode;
     }
+
 }
 }
