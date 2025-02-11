@@ -18,6 +18,9 @@ namespace EmailService.Modules.Users.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Returns all users.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
         {
@@ -25,6 +28,10 @@ namespace EmailService.Modules.Users.Controllers
         }
 
 
+        /// <summary>
+        /// Returns a user by ID.
+        /// </summary>
+        /// <param name="id">Should include the user's id</param>
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
@@ -34,6 +41,10 @@ namespace EmailService.Modules.Users.Controllers
             return user;
         }
 
+        /// <summary>
+        /// Lets a user register.
+        /// </summary>
+        /// <param name="user">Should have a username,password,role and email </param>
         [HttpPost("register")]
         public async Task<ActionResult<User>> CreateUser([FromBody] CreateUser user)
         {
@@ -41,17 +52,11 @@ namespace EmailService.Modules.Users.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUser(int id, [FromBody] User user)
-        {
-            if (id != user.Id)
-                return BadRequest();
-            var result = await _userService.UpdateUserAsync(user);
-            if (!result)
-                return NotFound();
-            return NoContent();
-        }
-
+        /// <summary>
+        /// Deletes a user by ID.
+        /// </summary>
+        /// <param name="id">Should include the user's id.</param>
+        /// 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(int id)
         {

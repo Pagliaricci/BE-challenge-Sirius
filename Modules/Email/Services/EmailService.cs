@@ -18,13 +18,7 @@ namespace EmailService.Modules.Email.Services
 
         public async Task<string> SendEmailAsync(SendEmailRequest email, int userId)
         {
-            var sender = await _userRepository.GetUserByIdAsync(userId);
-
-            if (sender == null)
-            {
-                throw new Exception("Sender or recipient not found");
-            }
-
+            var sender = await _userRepository.GetUserByIdAsync(userId) ?? throw new Exception("Sender or recipient not found");
             if (DateTime.UtcNow.Date > sender.LastEmailReset.Date)
             {
                 sender.EmailsSentToday = 0;

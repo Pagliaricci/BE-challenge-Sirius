@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EmailService</name>
+    </assembly>
+    <members>
+        <member name="T:EmailService.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:EmailService.Migrations.AddEmailsSentFields">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailsSentFields.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailsSentFields.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailsSentFields.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:EmailService.Migrations.AddEmailToUser">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailToUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailToUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Migrations.AddEmailToUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:EmailService.Modules.Email.Controllers.EmailController.CreateEmail(EmailService.Modules.Email.Models.SendEmailRequest)">
+            <summary>
+            Lets a user send an email.
+            </summary>
+            <param name="email">Should include the recipient email, a subject and an email body.</param>
+        </member>
+        <member name="M:EmailService.Modules.Stats.Controllers.StatsController.GetAllStats">
+            <summary>
+            Returns all user stats.
+            </summary>
+        </member>
+        <member name="M:EmailService.Modules.Users.Controllers.AuthController.Login(EmailService.Modules.Users.Models.LoginRequest)">
+            <summary>
+            Allows a user to log in.
+            </summary>
+            <param name="login">Should include a username and a password</param> 
+        </member>
+        <member name="M:EmailService.Modules.Users.Controllers.UserController.GetAllUsers">
+            <summary>
+            Returns all users.
+            </summary>
+        </member>
+        <member name="M:EmailService.Modules.Users.Controllers.UserController.GetUserById(System.Int32)">
+            <summary>
+            Returns a user by ID.
+            </summary>
+            <param name="id">Should include the user's id</param>
+        </member>
+        <member name="M:EmailService.Modules.Users.Controllers.UserController.CreateUser(EmailService.Modules.Users.Models.CreateUser)">
+            <summary>
+            Lets a user register.
+            </summary>
+            <param name="user">Should have a username,password,role and email </param>
+        </member>
+        <member name="M:EmailService.Modules.Users.Controllers.UserController.DeleteUser(System.Int32)">
+            <summary>
+            Deletes a user by ID.
+            </summary>
+            <param name="id">Should include the user's id.</param>
+            
+        </member>
+    </members>
+</doc>

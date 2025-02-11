@@ -18,7 +18,10 @@ namespace EmailService.Modules.Stats.Controllers
         {
             _statsService = statsService;
         }
-
+        
+        /// <summary>
+        /// Returns all user stats.
+        /// </summary>
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<List<Stat>>> GetAllStats()

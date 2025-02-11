@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using EmailService.Modules.Users.Models;
 using EmailService.Modules.Users.Repositories;
-using EmailService.Data; // Add this line
+using EmailService.Data; 
 
 namespace EmailService.Modules.Users.Services
 {

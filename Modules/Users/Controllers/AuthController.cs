@@ -15,6 +15,10 @@ namespace EmailService.Modules.Users.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Allows a user to log in.
+        /// </summary>
+        /// <param name="login">Should include a username and a password</param> 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
@@ -23,13 +27,6 @@ namespace EmailService.Modules.Users.Controllers
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
 
             return Ok(new { token });
-        }
-
-        [HttpGet("protected")]
-        [Authorize]
-        public IActionResult ProtectedEndpoint()
-        {
-            return Ok(new { message = "¡Has accedido a un endpoint protegido!" });
         }
     }
 }

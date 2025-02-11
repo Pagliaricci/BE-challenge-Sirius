@@ -6,6 +6,7 @@ using System.Security.Claims;
 
 namespace EmailService.Modules.Email.Controllers
 {
+
     [ApiController]
     [Route("api/email")]
     public class EmailController : ControllerBase
@@ -17,6 +18,10 @@ namespace EmailService.Modules.Email.Controllers
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Lets a user send an email.
+        /// </summary>
+        /// <param name="email">Should include the recipient email, a subject and an email body.</param>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<string>> CreateEmail([FromBody] SendEmailRequest email)
@@ -26,8 +31,6 @@ namespace EmailService.Modules.Email.Controllers
             {
                 return BadRequest("Invalid user ID.");
             }
-
-
 
             var result = await _emailService.SendEmailAsync(email, int.Parse(userId));
             return Ok(result);

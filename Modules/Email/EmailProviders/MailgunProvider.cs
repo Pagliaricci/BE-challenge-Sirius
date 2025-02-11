@@ -11,12 +11,9 @@ namespace EmailService.Modules.Email.EmailProviders
     public class MailgunProvider : IEmailProvider
     {
         private readonly string _apiKey;
-        private readonly string _domain;
-
         public MailgunProvider(IConfiguration configuration)
         {
             _apiKey = Environment.GetEnvironmentVariable("MAILGUN_API_KEY") ?? throw new InvalidOperationException("Mailgun API key is not configured.");
-            _domain = Environment.GetEnvironmentVariable("MAILGUN_DOMAIN") ?? throw new InvalidOperationException("Mailgun domain is not configured.");
         }
 
         public async Task<bool> SendEmailAsync(SendEmailRequest email, User sender)

@@ -5,16 +5,11 @@ using System.Threading.Tasks;
 
 namespace EmailService.Modules.Stats.Services
 {
-    public class StatsService : IStatsService
+    public class StatsService(IUserRepository userRepository) : IStatsService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public StatsService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
-       public async Task<List<Stat>> GetAllStatsAsync()
+        public async Task<List<Stat>> GetAllStatsAsync()
        {
         var users = await GetUsersWithEmailsSentAsync();
         var (updatedUsers, changesMade) = ResetUserQuotasIfNecessary(users);
