@@ -50,5 +50,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ghcr.io/pagliaricci/be-challenge-sirius:latest
+            ghcr.io/pagliaricci/be-challenge-sirius:${{ github.ref_name }}
