@@ -25,3 +25,5 @@ jobs:
 
       - name: Run tests
         run: dotnet test --configuration Release
+        env:
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
