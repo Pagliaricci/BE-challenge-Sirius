@@ -11,9 +11,9 @@ namespace EmailService.Modules.Users.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -22,9 +22,10 @@ namespace EmailService.Modules.Users.Controllers
         /// Returns all users.
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers()
         {
-            return await _userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
 
@@ -33,14 +34,15 @@ namespace EmailService.Modules.Users.Controllers
         /// </summary>
         /// <param name="id">Should include the user's id</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<UserDTO>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
+            {
                 return NotFound();
-            return user;
+            }
+            return Ok(user);
         }
-
         /// <summary>
         /// Lets a user register.
         /// </summary>

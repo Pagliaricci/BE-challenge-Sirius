@@ -1,0 +1,113 @@
+using Xunit;
+using Moq;
+using FluentAssertions;
+using EmailService.Modules.Stats.Models;
+using EmailService.Modules.Stats.Services;
+using EmailService.Modules.Stats.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+
+public class StatsControllerTests
+{
+    private readonly Mock<IStatsService> _statsServiceMock;
+    private readonly StatsController _statsController;
+
+    public StatsControllerTests()
+    {
+        _statsServiceMock = new Mock<IStatsService>();
+        _statsController = new StatsController(_statsServiceMock.Object);
+    }
+
+    [Fact]
+    public async Task GetAllStats_ShouldReturnOk_WhenUserIsAdmin()
+    {
+        var expectedStats = new List<Stat>
+        {
+            new Stat { UserId = 1, EmailSent = 10, EmailsFailed = 1 },
+            new Stat { UserId = 2, EmailSent = 5, EmailsFailed = 0 }
+        };
+        _statsServiceMock.Setup(service => service.GetAllStatsAsync()).ReturnsAsync(expectedStats);
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Role, "Admin")
+        };
+        var identity = new ClaimsIdentity(claims, "test");
+        var principal = new ClaimsPrincipal(identity);
+        _statsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = principal }
+        };
+
+        var result = await _statsController.GetAllStats();
+        var okResult = result.Result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult.Value.Should().BeEquivalentTo(expectedStats);
+        _statsServiceMock.Verify(service => service.GetAllStatsAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAllStats_ShouldReturnUnauthorized_WhenRoleIsMissing()
+    {
+        var claims = new List<Claim>();
+        var identity = new ClaimsIdentity(claims, "test");
+        var principal = new ClaimsPrincipal(identity);
+        _statsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = principal }
+        };
+
+        var result = await _statsController.GetAllStats();
+        var unauthorizedResult = result.Result as UnauthorizedObjectResult;
+        unauthorizedResult.Should().NotBeNull();
+        unauthorizedResult.Value.Should().Be("Invalid token: missing role");
+        _statsServiceMock.Verify(service => service.GetAllStatsAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task GetAllStats_ShouldReturnForbidden_WhenUserIsNotAdmin()
+    {
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Role, "User")
+        };
+        var identity = new ClaimsIdentity(claims, "test");
+        var principal = new ClaimsPrincipal(identity);
+        _statsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = principal }
+        };
+
+        var result = await _statsController.GetAllStats();
+        var forbidResult = result.Result as ForbidResult;
+        forbidResult.Should().NotBeNull();
+        _statsServiceMock.Verify(service => service.GetAllStatsAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task GetAllStats_ShouldReturnOk_WhenStatsAreEmpty()
+    {
+        var expectedStats = new List<Stat>();
+        _statsServiceMock.Setup(service => service.GetAllStatsAsync()).ReturnsAsync(expectedStats);
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Role, "Admin")
+        };
+        var identity = new ClaimsIdentity(claims, "test");
+        var principal = new ClaimsPrincipal(identity);
+        _statsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = principal }
+        };
+
+        var result = await _statsController.GetAllStats();
+        var okResult = result.Result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult.Value.Should().BeEquivalentTo(expectedStats);
+        _statsServiceMock.Verify(service => service.GetAllStatsAsync(), Times.Once);
+    }
+}
+

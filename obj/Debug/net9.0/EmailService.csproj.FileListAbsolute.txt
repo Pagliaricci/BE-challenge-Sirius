@@ -223,3 +223,4 @@
 /Users/pablopagliaricci/EmailService/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /Users/pablopagliaricci/EmailService/bin/Debug/net9.0/EmailService.xml
 /Users/pablopagliaricci/EmailService/obj/Debug/net9.0/EmailService.xml
+/Users/pablopagliaricci/EmailService/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.InMemory.dll

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TJH9nVDOZJg=",
+  "dgSpecHash": "9c37eRiHkQQ=",
   "success": true,
   "projectFilePath": "/Users/pablopagliaricci/EmailService/EmailService.csproj",
   "expectedPackageFiles": [
@@ -25,6 +25,7 @@
     "/Users/pablopagliaricci/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.1/microsoft.entityframeworkcore.abstractions.9.0.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.1/microsoft.entityframeworkcore.analyzers.9.0.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/microsoft.entityframeworkcore.design/9.0.1/microsoft.entityframeworkcore.design.9.0.1.nupkg.sha512",
+    "/Users/pablopagliaricci/.nuget/packages/microsoft.entityframeworkcore.inmemory/9.0.1/microsoft.entityframeworkcore.inmemory.9.0.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.1/microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/Users/pablopagliaricci/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.1/microsoft.extensions.caching.abstractions.9.0.1.nupkg.sha512",

@@ -31,9 +31,13 @@ namespace EmailService.Modules.Email.Controllers
             {
                 return BadRequest("Invalid user ID.");
             }
-
+            try{
             var result = await _emailService.SendEmailAsync(email, int.Parse(userId));
             return Ok(result);
+            }
+            catch(Exception e){
+                return BadRequest(e.Message);
+            }
         }
     }
 }
